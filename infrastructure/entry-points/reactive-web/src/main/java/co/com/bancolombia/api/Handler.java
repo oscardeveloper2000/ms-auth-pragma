@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class Handler {
-private  final CreateUserUseCase userUseCase;
+private final CreateUserUseCase userUseCase;
 //private  final UseCase2 useCase2;
 
     public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
