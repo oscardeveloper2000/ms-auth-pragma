@@ -12,3 +12,12 @@ spring:
       path: /h2
   profiles:
     include:
+
+adapters:
+  r2dbc:
+    host: "localhost"
+    port: 5432
+    database: "db_auth"
+    schema: "public"
+    username: "gestor"
+    password: "123456"
