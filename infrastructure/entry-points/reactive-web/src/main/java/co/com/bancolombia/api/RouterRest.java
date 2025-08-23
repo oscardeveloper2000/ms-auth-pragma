@@ -20,6 +20,6 @@ public class RouterRest {
 
     @Bean
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(POST(userPath.getUsers()), handler::listenSaveUser);
+        return route(POST(userPath.getUsers()), handler::listenSaveUserV);
     }
 }

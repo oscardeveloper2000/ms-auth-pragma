@@ -1,5 +1,8 @@
 package co.com.bancolombia.r2dbc.entity;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -18,12 +21,24 @@ public class UserEntity {
     @Id
     @Column("user_id")
     private Long id;
+
+    @NotBlank(message = "First name is mandatory")
     private String firstName;
+
+    @NotBlank(message = "Last name is mandatory")
     private String lastName;
+
     private LocalDate birthDate;
     private String address;
     private String phone;
+
+
+    @Email(message = "El email should be valid")
+    @NotBlank(message = "Email is mandatory")
     private String email;
+
+
+    @NotNull(message = "Base salary is not null")
     private Double baseSalary;
 
 }
