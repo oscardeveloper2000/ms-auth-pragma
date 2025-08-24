@@ -8,6 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 
@@ -28,7 +30,7 @@ public class UserEntity {
     @NotBlank(message = "Last name is mandatory")
     private String lastName;
 
-    private LocalDate birthDate;
+    private Timestamp birthDate;
     private String address;
     private String phone;
 
@@ -39,6 +41,6 @@ public class UserEntity {
 
 
     @NotNull(message = "Base salary is not null")
-    private Double baseSalary;
+    private BigDecimal baseSalary;
 
 }
