@@ -6,17 +6,21 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-public class CreateUserUseCase {
+public class CreateUserUseCase implements CreateUser {
 
     private final UserRepository userRepository;
 
-    public Mono<User> createUser(User user) {
-        return userRepository.existsByEmail(user.getEmail())
+
+    @Override
+    public Mono<User> apply(Mono<User> user) {
+        return user.flatMap(userDTO ->
+            userRepository.existsByEmail(userDTO.getEmail())
                 .flatMap(exists -> {
-                    if(exists) {
-                        return Mono.error(new IllegalArgumentException("El correo electrónico ya está registrado"));
+                    if (exists) {
+                        return Mono.error(new UserAlreadyExistsException("Ya existe el usuario con correo " + userDTO.getEmail()));
                     }
-                    return userRepository.save(user);
-                });
+                    return userRepository.save(userDTO);
+                })
+        );
     }
 }
