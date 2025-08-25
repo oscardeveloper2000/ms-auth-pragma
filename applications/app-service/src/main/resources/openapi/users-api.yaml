@@ -1,0 +1,158 @@
+openapi: 3.0.3
+info:
+  title: ms-auth API
+  version: "v1"
+  description: API de autenticación y gestión de usuarios.
+servers:
+  - url: http://localhost:8080
+    description: Local
+  - url: /
+    description: Relative (detrás de gateway)
+tags:
+  - name: Users
+    description: Operaciones de usuarios
+paths:
+  /api/v1/users:
+    post:
+      tags: [Users]
+      summary: Crear usuario
+      description: Crea un usuario y retorna su representación.
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        "200":
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        "400":
+          description: Petición inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "409":
+          description: Conflicto - el usuario ya existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    UserRequest:
+      type: object
+      description: Datos para crear un usuario
+      required:
+        - firstName
+        - lastName
+        - birthDate
+        - email
+        - baseSalary
+      properties:
+        firstName:
+          type: string
+          example: John
+          description: Nombre
+        lastName:
+          type: string
+          example: Doe
+          description: Apellido
+        birthDate:
+          type: string
+          format: date-time
+          example: 1990-05-15T00:00:00Z
+          description: Fecha de nacimiento (Timestamp ISO-8601)
+        address:
+          type: string
+          example: 742 Evergreen Terrace
+          description: Dirección
+        phone:
+          type: string
+          example: +57-3001234567
+          description: Teléfono de contacto
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+          description: Correo electrónico
+        baseSalary:
+          type: number
+          format: double
+          example: 3500.75
+          minimum: 0
+          description: Salario base
+    UserResponse:
+      type: object
+      description: Representación de un usuario
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+          description: Identificador único
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        birthDate:
+          type: string
+          format: date-time
+          example: 1990-05-15T00:00:00Z
+        address:
+          type: string
+          example: 742 Evergreen Terrace
+        phone:
+          type: string
+          example: +57-3001234567
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        baseSalary:
+          type: number
+          format: double
+          example: 3500.75
+          minimum: 0
+    # ... existing code ...
+    ErrorResponse:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          example: 5b2e0e76-2b2d-4c1e-9f9f-abcdef012345
+        errorHeader:
+          type: object
+          properties:
+            returnCode:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: Bad Request
+        errorDetail:
+          type: object
+          properties:
+            code:
+              type: string
+              example: 400
+            message:
+              type: string
+              example: Datos inválidos
+            errorDate:
+              type: string
+              format: date
+              example: 2025-08-25
