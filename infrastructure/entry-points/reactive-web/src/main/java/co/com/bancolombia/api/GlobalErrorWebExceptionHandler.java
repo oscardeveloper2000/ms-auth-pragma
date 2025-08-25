@@ -3,8 +3,8 @@ package co.com.bancolombia.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.com.bancolombia.usecase.createuser.UserAlreadyExistsException;
+import co.com.bancolombia.usecase.createuser.DomainValidationException;
 import jakarta.validation.ConstraintViolationException;
-
 
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.annotation.Order;
@@ -18,7 +18,9 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+// ... existing code ...
 @Component
 @Order(-2)
 public class GlobalErrorWebExceptionHandler implements ErrorWebExceptionHandler {
@@ -37,7 +39,21 @@ public class GlobalErrorWebExceptionHandler implements ErrorWebExceptionHandler 
         String detailCode = "500";
         String detailMessage = "Ocurrió un error inesperado";
 
-        if (ex instanceof ConstraintViolationException) {
+        if (ex instanceof ConstraintViolationException cve) {
+            status = HttpStatus.BAD_REQUEST.value();
+            headerMessage = "Bad Request";
+            detailCode = "400";
+            // Construye un mensaje legible con todas las violaciones
+            detailMessage = cve.getConstraintViolations().isEmpty()
+                    ? cve.getMessage()
+                    : cve.getConstraintViolations().stream()
+                    .map(v -> {
+                        String path = v.getPropertyPath() != null ? v.getPropertyPath().toString() : "";
+                        String msg = v.getMessage() != null ? v.getMessage() : "violación de restricción";
+                        return path.isBlank() ? msg : (path + ": " + msg);
+                    })
+                    .collect(Collectors.joining("; "));
+        } else if (ex instanceof DomainValidationException) {
             status = HttpStatus.BAD_REQUEST.value();
             headerMessage = "Bad Request";
             detailCode = "400";
