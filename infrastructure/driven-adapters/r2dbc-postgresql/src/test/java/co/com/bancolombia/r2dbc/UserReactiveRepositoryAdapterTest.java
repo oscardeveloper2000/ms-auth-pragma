@@ -6,13 +6,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
+
 import org.springframework.data.domain.Example;
+
+import co.com.bancolombia.model.user.User;
+import co.com.bancolombia.r2dbc.entity.UserEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class UserReactiveRepositoryAdapterTest {
@@ -30,7 +35,7 @@ class UserReactiveRepositoryAdapterTest {
     @Test
     void mustFindValueById() {
 
-        when(repository.findById("1")).thenReturn(Mono.just("test"));
+        when(repository.findById(1l)).thenReturn(Mono.just(mock(UserEntity.class)));
         when(mapper.map("test", Object.class)).thenReturn("test");
 
         Mono<Object> result = repositoryAdapter.findById("1");
