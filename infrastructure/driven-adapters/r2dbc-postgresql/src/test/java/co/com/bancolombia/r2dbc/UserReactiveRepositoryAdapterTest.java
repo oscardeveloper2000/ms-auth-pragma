@@ -33,51 +33,105 @@ class UserReactiveRepositoryAdapterTest {
     ObjectMapper mapper;
 
     @Test
-    void mustFindValueById() {
+    void mustFindUserById() {
+        UserEntity userEntity = UserEntity.builder()
+                .id(1L)
+                .email("john.doe@example.com")
+                .build();
+        User user = User.builder()
+                .id(1L)
+                .email("john.doe@example.com")
+                .build();
 
-        when(repository.findById(1l)).thenReturn(Mono.just(mock(UserEntity.class)));
-        when(mapper.map("test", Object.class)).thenReturn("test");
+        when(repository.findById(1L)).thenReturn(Mono.just(userEntity));
+        when(mapper.map(userEntity, User.class)).thenReturn(user);
 
-        Mono<Object> result = repositoryAdapter.findById("1");
+        Mono<User> result = repositoryAdapter.findById(1L);
 
         StepVerifier.create(result)
-                .expectNextMatches(value -> value.equals("test"))
+                .expectNextMatches(u -> u.getId().equals(1L) && "john.doe@example.com".equals(u.getEmail()))
                 .verifyComplete();
     }
+
 
     @Test
-    void mustFindAllValues() {
-        when(repository.findAll()).thenReturn(Flux.just("test"));
-        when(mapper.map("test", Object.class)).thenReturn("test");
+    void mustFindAllUsers() {
+        UserEntity userEntity = UserEntity.builder()
+                .id(2L)
+                .email("jane.doe@example.com")
+                .build();
+        User user = User.builder()
+                .id(2L)
+                .email("jane.doe@example.com")
+                .build();
 
-        Flux<Object> result = repositoryAdapter.findAll();
+        when(repository.findAll()).thenReturn(Flux.just(userEntity));
+        when(mapper.map(userEntity, User.class)).thenReturn(user);
+
+        Flux<User> result = repositoryAdapter.findAll();
 
         StepVerifier.create(result)
-                .expectNextMatches(value -> value.equals("test"))
+                .expectNextMatches(u -> u.getId().equals(2L) && "jane.doe@example.com".equals(u.getEmail()))
                 .verifyComplete();
     }
+
 
     @Test
-    void mustFindByExample() {
-        when(repository.findAll(any(Example.class))).thenReturn(Flux.just("test"));
-        when(mapper.map("test", Object.class)).thenReturn("test");
+    void mustFindUsersByExample() {
+        User exampleUser = User.builder()
+                .email("filter@example.com")
+                .build();
+        UserEntity exampleEntity = UserEntity.builder()
+                .email("filter@example.com")
+                .build();
 
-        Flux<Object> result = repositoryAdapter.findByExample("test");
+        UserEntity foundEntity = UserEntity.builder()
+                .id(3L)
+                .email("filter@example.com")
+                .build();
+        User mappedUser = User.builder()
+                .id(3L)
+                .email("filter@example.com")
+                .build();
+
+        when(mapper.map(exampleUser, UserEntity.class)).thenReturn(exampleEntity);
+        when(repository.findAll(any(Example.class))).thenReturn(Flux.just(foundEntity));
+        when(mapper.map(foundEntity, User.class)).thenReturn(mappedUser);
+
+        Flux<User> result = repositoryAdapter.findByExample(exampleUser);
 
         StepVerifier.create(result)
-                .expectNextMatches(value -> value.equals("test"))
+                .expectNextMatches(u -> u.getId().equals(3L) && "filter@example.com".equals(u.getEmail()))
                 .verifyComplete();
     }
+
 
     @Test
-    void mustSaveValue() {
-        when(repository.save("test")).thenReturn(Mono.just("test"));
-        when(mapper.map("test", Object.class)).thenReturn("test");
+    void mustSaveUser() {
+        User userToSave = User.builder()
+                .email("new.user@example.com")
+                .build();
+        UserEntity dataToSave = UserEntity.builder()
+                .email("new.user@example.com")
+                .build();
+        UserEntity savedEntity = UserEntity.builder()
+                .id(4L)
+                .email("new.user@example.com")
+                .build();
+        User savedUser = User.builder()
+                .id(4L)
+                .email("new.user@example.com")
+                .build();
 
-        Mono<Object> result = repositoryAdapter.save("test");
+        when(mapper.map(userToSave, UserEntity.class)).thenReturn(dataToSave);
+        when(repository.save(dataToSave)).thenReturn(Mono.just(savedEntity));
+        when(mapper.map(savedEntity, User.class)).thenReturn(savedUser);
+
+        Mono<User> result = repositoryAdapter.save(userToSave);
 
         StepVerifier.create(result)
-                .expectNextMatches(value -> value.equals("test"))
+                .expectNextMatches(u -> u.getId().equals(4L) && "new.user@example.com".equals(u.getEmail()))
                 .verifyComplete();
     }
+
 }
