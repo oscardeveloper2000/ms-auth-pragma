@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-// ... existing code ...
+
 @Component
 @Order(-2)
 public class GlobalErrorWebExceptionHandler implements ErrorWebExceptionHandler {
@@ -71,7 +71,7 @@ public class GlobalErrorWebExceptionHandler implements ErrorWebExceptionHandler 
         }
 
 
-        // Log con contexto (no incluir cuerpos ni headers sensibles)
+
         org.springframework.http.server.reactive.ServerHttpRequest request = exchange.getRequest();
         java.net.URI requestUri = request.getURI();
         String httpMethod = request.getMethod() != null ? request.getMethod().name() : "UNKNOWN";

@@ -2,7 +2,7 @@ package co.com.bancolombia.api;
 
 import lombok.Data;
 
-// Modelo de respuesta de error (puedes moverlo a un archivo propio si lo prefieres)
+
 @Data
 public class ErrorResponse {
     private String correlationId;

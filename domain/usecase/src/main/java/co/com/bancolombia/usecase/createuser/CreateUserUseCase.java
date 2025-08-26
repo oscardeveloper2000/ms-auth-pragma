@@ -16,7 +16,7 @@ public class CreateUserUseCase implements CreateUser {
     private final UserRepository userRepository;
     private final LoggerPort logger;
 
-    // Validación de email (patrón simple y efectivo)
+
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     private static final BigDecimal MIN_SALARY = BigDecimal.ZERO;
@@ -60,13 +60,13 @@ public class CreateUserUseCase implements CreateUser {
     }
 
     private void validateUserData(User user) {
-        // Email obligatorio y con formato válido
+
         String email = user.getEmail();
         if (email == null || email.isBlank() || !EMAIL_PATTERN.matcher(email).matches()) {
             throw new DomainValidationException("El correo_electronico no tiene un formato válido");
         }
 
-        // Salario base numérico y en rango [0, 15000000]
+
         BigDecimal salary = user.getBaseSalary();
         if (salary == null) {
             throw new DomainValidationException("El salario_base es obligatorio");
@@ -76,7 +76,7 @@ public class CreateUserUseCase implements CreateUser {
         }
     }
 
-    // Utilidad para evitar exponer datos sensibles en logs
+
     private String maskEmail(String email) {
         if (email == null || email.isBlank() || !email.contains("@")) return "N/A";
         String[] parts = email.split("@", 2);

@@ -27,7 +27,7 @@ public record UserRecord(
 
     @NotNull(message = "Base salary is not null")
     @Min(value = 0, message = "Base salary must be positive")
-         @Max(value = 15000000, message = "Base salary must be positive and less than 15,000,000")
+         @Max(value = 15000000, message = "Base salary must be  less than 15,000,000")
          BigDecimal baseSalary
 ) {
 }
