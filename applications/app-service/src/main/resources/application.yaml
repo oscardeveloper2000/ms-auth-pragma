@@ -34,7 +34,8 @@ cors:
 routes:
   paths:
     users: "/api/v1/users"
-    usersById: "/api/v1/users/{id}"
+    usersById: "${routes.paths.users}/{id}"
+    usersByDocument: "${routes.paths.users}/document/{documentNumber}"
 
 springdoc:
   swagger-ui:

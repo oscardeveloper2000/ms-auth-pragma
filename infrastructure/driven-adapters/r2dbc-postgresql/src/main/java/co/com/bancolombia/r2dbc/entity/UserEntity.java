@@ -24,6 +24,10 @@ public class UserEntity {
     @Column("user_id")
     private Long id;
 
+    @NotBlank(message = "Document number is mandatory")
+    @Column("document_number")
+    private String documentNumber;
+
     @NotBlank(message = "First name is mandatory")
     private String firstName;
 

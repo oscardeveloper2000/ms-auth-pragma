@@ -2,10 +2,8 @@ package co.com.bancolombia.api;
 
 import co.com.bancolombia.api.user.dto.UserMapper;
 import co.com.bancolombia.api.user.dto.UserRecord;
-import co.com.bancolombia.model.user.User;
-import co.com.bancolombia.usecase.createuser.CreateUser;
-import co.com.bancolombia.usecase.createuser.CreateUserUseCase;
-import jakarta.validation.Validator;
+import co.com.bancolombia.usecase.user.CreateUser;
+import co.com.bancolombia.usecase.user.GetUserByDocumentNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -21,6 +19,7 @@ public class Handler {
 private final CreateUser createUseCase;
 private final ValidatorHandler validatorHandler;
 private final UserMapper userMapper;
+    private final GetUserByDocumentNumber getUserByDocumentNumberUseCase;
 
 
 
@@ -36,6 +35,18 @@ private final UserMapper userMapper;
 //                 .onErrorResume( e -> ServerResponse.badRequest().bodyValue(e.getMessage()))
                 ;
     }
+
+    public Mono<ServerResponse> listenGetUserByDocumentNumber(ServerRequest request) {
+        String documentNumber = request.pathVariable("documentNumber");
+        return getUserByDocumentNumberUseCase.apply(documentNumber)
+                .map(userMapper::toDTO)
+                .flatMap(dto -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(dto))
+                .switchIfEmpty(ServerResponse.notFound().build());
+    }
+
+
 
 
 

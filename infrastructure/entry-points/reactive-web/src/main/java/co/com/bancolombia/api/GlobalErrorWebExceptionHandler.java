@@ -2,8 +2,8 @@ package co.com.bancolombia.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import co.com.bancolombia.usecase.createuser.UserAlreadyExistsException;
-import co.com.bancolombia.usecase.createuser.DomainValidationException;
+import co.com.bancolombia.usecase.user.UserAlreadyExistsException;
+import co.com.bancolombia.usecase.commom.DomainValidationException;
 import jakarta.validation.ConstraintViolationException;
 
 import org.slf4j.Logger;

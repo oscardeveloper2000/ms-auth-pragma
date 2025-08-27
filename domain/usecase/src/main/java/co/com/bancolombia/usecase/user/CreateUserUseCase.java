@@ -1,7 +1,8 @@
-package co.com.bancolombia.usecase.createuser;
+package co.com.bancolombia.usecase.user;
 
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.model.user.gateways.UserRepository;
+import co.com.bancolombia.usecase.commom.DomainValidationException;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 // ... existing code ...
