@@ -1,4 +1,4 @@
-package co.com.bancolombia.r2dbc;
+package co.com.bancolombia.r2dbc.user;
 
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.r2dbc.entity.UserEntity;
@@ -10,4 +10,5 @@ import reactor.core.publisher.Mono;
 public interface UserReactiveRepository extends ReactiveCrudRepository<UserEntity, Long>, ReactiveQueryByExampleExecutor<UserEntity> {
     Mono<Boolean> existsByEmail(String email);
     Mono<User> findByDocumentNumber(String documentNumber);
+    Mono<User> findByEmail(String email);
 }

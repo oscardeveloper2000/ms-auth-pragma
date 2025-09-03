@@ -1,4 +1,4 @@
-package co.com.bancolombia.api;
+package co.com.bancolombia.api.user;
 
 import co.com.bancolombia.api.config.UserPath;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +13,14 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 
 @Configuration
 @RequiredArgsConstructor
-public class RouterRest {
+public class UserRouterRest {
 
     private final UserPath userPath;
-    private final Handler userHandler;
+    private final UserHandler userHandler;
 
     @Bean
-    public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(POST(userPath.getUsers()), handler::listenSaveUserV)
+    public RouterFunction<ServerResponse> routerFunction(UserHandler handler) {
+        return route(POST(userPath.getUsers()), handler::listenSaveUser)
                 .andRoute(GET(userPath.getUsersByDocument()), handler::listenGetUserByDocumentNumber);
     }
 

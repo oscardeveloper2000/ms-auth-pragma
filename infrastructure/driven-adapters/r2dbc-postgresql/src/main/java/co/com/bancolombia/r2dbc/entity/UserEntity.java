@@ -47,4 +47,11 @@ public class UserEntity {
     @NotNull(message = "Base salary is not null")
     private BigDecimal baseSalary;
 
+    @NotBlank(message = "Password is mandatory")
+    private String passwordHash;
+
+    @NotNull(message = "Role is not null")
+    @Column("role_id")
+    private Long roleId;
+
 }

@@ -1,4 +1,5 @@
 package co.com.bancolombia.model.user;
+import co.com.bancolombia.model.role.RoleCode;
 import lombok.*;
 //import lombok.NoArgsConstructor;
 
@@ -21,5 +22,8 @@ public class User {
     private String phone;
     private String email;
     private BigDecimal baseSalary;
+    private String passwordHash;
+    private Long roleId;
+    private String roleName;
 
 }
