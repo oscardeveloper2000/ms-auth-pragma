@@ -1,6 +1,8 @@
 package co.com.bancolombia.usecase.user;
 
+import co.com.bancolombia.model.role.gateways.RoleRepository;
 import co.com.bancolombia.model.user.User;
+import co.com.bancolombia.model.user.gateways.EncryptPasswordGateway;
 import co.com.bancolombia.model.user.gateways.UserRepository;
 import co.com.bancolombia.usecase.commom.DomainValidationException;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,9 @@ import java.util.regex.Pattern;
 public class CreateUserUseCase implements CreateUser {
 
     private final UserRepository userRepository;
+    private final RoleRepository rolRepository;
     private final LoggerPort logger;
+    private final EncryptPasswordGateway encryptPasswordGateway;
 
 
     private static final Pattern EMAIL_PATTERN =
@@ -47,8 +51,11 @@ public class CreateUserUseCase implements CreateUser {
                                     return Mono.error(new UserAlreadyExistsException("Ya existe el usuario con correo " + userDTO.getEmail()));
                                 }
                                 logger.info("Guardando nuevo usuario: email={}", maskEmail(userDTO.getEmail()));
-                                return userRepository.save(userDTO);
-                            });
+                                return rolRepository.findById(userDTO.getRoleId())
+                                        .switchIfEmpty(Mono.error( new DomainValidationException("Role not found " + userDTO.getRoleId())));
+                            })
+                            .map(role -> userDTO.toBuilder().roleId(role.getId()).passwordHash(encryptPasswordGateway.encryptPassword(userDTO.getPasswordHash())).build())
+                            .flatMap(userRepository::save);
                 })
                 .doOnSuccess(u -> {
                     if (u != null) {
