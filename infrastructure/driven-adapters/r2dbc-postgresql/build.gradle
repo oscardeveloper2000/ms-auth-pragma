@@ -9,5 +9,6 @@ dependencies {
     implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
 
     testImplementation 'org.reactivecommons.utils:object-mapper:0.1.0'
+
 }
 
