@@ -21,7 +21,8 @@ public class UserRouterRest {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(UserHandler handler) {
         return route(POST(userPath.getUsers()), handler::listenSaveUser)
-                .andRoute(GET(userPath.getUsersByDocument()), handler::listenGetUserByDocumentNumber);
+                .andRoute(GET(userPath.getUsersByDocument()), handler::listenGetUserByDocumentNumber)
+                .andRoute(POST(userPath.getGetUsersByEmails()), userHandler::getUsersByEmails);
     }
 
 }

@@ -4,9 +4,12 @@ import co.com.bancolombia.api.error.ErrorHandler;
 import co.com.bancolombia.api.user.dto.UserMapper;
 import co.com.bancolombia.api.user.dto.UserRecord;
 import co.com.bancolombia.model.common.LoggerPort;
+import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.usecase.user.CreateUser;
 import co.com.bancolombia.usecase.user.GetUserByDocumentNumber;
 
+import co.com.bancolombia.usecase.user.GetUsersByEmail;
+import co.com.bancolombia.usecase.user.GetUsersByEmailsUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -15,6 +18,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 
 
 @Component
@@ -23,6 +27,7 @@ import reactor.core.publisher.Mono;
 public class UserHandler {
     private final CreateUser createUseCase;
     private final GetUserByDocumentNumber getUserByDocumentNumberUseCase;
+    private final GetUsersByEmail getUsersByEmailsUseCase;
     private final UserMapper userMapper;
     private final LoggerPort logger;
     private final ErrorHandler errorHandler;
@@ -60,6 +65,23 @@ public class UserHandler {
                 .switchIfEmpty(ServerResponse.notFound().build())
                 .onErrorResume(error -> {
                     logger.error("Error al buscar usuario: {}", error.getMessage());
+                    return errorHandler.handle(error, request);
+                });
+    }
+
+    public Mono<ServerResponse> getUsersByEmails(ServerRequest request) {
+        logger.info("Recibiendo petición para obtener usuarios por emails");
+        return request.bodyToMono(List.class)
+                .flatMapMany(emails -> getUsersByEmailsUseCase.apply((List<String>) emails))
+                .collectList()
+                .flatMap(users -> {
+                    logger.info("Usuarios encontrados: {}", users.size());
+                    return ServerResponse.ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .bodyValue(users);
+                })
+                .onErrorResume(error -> {
+                    logger.error("Error al obtener usuarios: {}", error.getMessage());
                     return errorHandler.handle(error, request);
                 });
     }
