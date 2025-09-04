@@ -41,6 +41,7 @@ routes:
     users: "/api/v1/users"
     usersById: "${routes.paths.users}/{id}"
     usersByDocument: "${routes.paths.users}/document/{documentNumber}"
+    getUsersByEmails: "${routes.paths.users}/emails"
 
 springdoc:
   swagger-ui:
