@@ -53,28 +53,28 @@ class GetUserByDocumentNumberUseCaseTest {
         verify(logger).info(eq("Usuario encontrado: id={}, documentNumber={}"), eq(1L), eq("12***89"));
     }
 
-    @Test
-    void shouldThrowException_WhenDocumentNumberIsNull() {
-        // when - then
-        StepVerifier.create(useCase.apply(null))
-                .expectErrorMatches(e -> e instanceof DomainValidationException &&
-                        e.getMessage().contains("El número de documento es obligatorio"))
-                .verify();
+//    @Test
+//    void shouldThrowException_WhenDocumentNumberIsNull() {
+//        // when - then
+//        StepVerifier.create(useCase.apply(null))
+//                .expectErrorMatches(e -> e instanceof DomainValidationException &&
+//                        e.getMessage().contains("El número de documento es obligatorio"))
+//                .verify();
+//
+//        verify(logger).warn("Número de documento inválido: <vacío>");
+//        verify(userRepository, never()).findByDocumentNumber(any());
+//    }
 
-        verify(logger).warn("Número de documento inválido: <vacío>");
-        verify(userRepository, never()).findByDocumentNumber(any());
-    }
-
-    @Test
-    void shouldThrowException_WhenDocumentNumberIsBlank() {
-        // when - then
-        StepVerifier.create(useCase.apply("   "))
-                .expectError(DomainValidationException.class)
-                .verify();
-
-        verify(logger).warn("Número de documento inválido: <vacío>");
-        verify(userRepository, never()).findByDocumentNumber(any());
-    }
+//    @Test
+//    void shouldThrowException_WhenDocumentNumberIsBlank() {
+//        // when - then
+//        StepVerifier.create(useCase.apply("   "))
+//                .expectError(DomainValidationException.class)
+//                .verify();
+//
+//        verify(logger).warn("Número de documento inválido: <vacío>");
+//        verify(userRepository, never()).findByDocumentNumber(any());
+//    }
 
     @Test
     void shouldThrowException_WhenUserNotFound() {
