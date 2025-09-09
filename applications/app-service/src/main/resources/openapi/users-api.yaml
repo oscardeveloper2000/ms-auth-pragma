@@ -49,6 +49,81 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/users/{documentNumber}:
+    get:
+      tags: [Users]
+      summary: Obtener usuario por número de documento
+      description: Busca un usuario por su número de documento
+      operationId: getUserByDocumentNumber
+      parameters:
+        - name: documentNumber
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Número de documento del usuario
+          example: "12345678"
+      responses:
+        "200":
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        "404":
+          description: Usuario no encontrado
+        "400":
+          description: Petición inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/users/by-emails:
+    post:
+      tags: [Users]
+      summary: Obtener usuarios por lista de emails
+      description: Retorna información básica de usuarios filtrados por lista de emails
+      operationId: getUsersByEmails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                format: email
+              example: ["user1@example.com", "user2@example.com"]
+      responses:
+        "200":
+          description: Usuarios encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserBasicInfo'
+        "400":
+          description: Petición inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Error interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   schemas:
     UserRequest:
@@ -93,6 +168,7 @@ components:
           example: 3500.75
           minimum: 0
           description: Salario base
+
     UserResponse:
       type: object
       description: Representación de un usuario
@@ -127,7 +203,22 @@ components:
           format: double
           example: 3500.75
           minimum: 0
-    # ... existing code ...
+
+    UserBasicInfo:
+      type: object
+      description: Información básica del usuario
+      properties:
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+
     ErrorResponse:
       type: object
       properties:

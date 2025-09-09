@@ -45,7 +45,7 @@ public class SecurityConfig {
   public SecurityWebFilterChain filterChain(ServerHttpSecurity http,
                                             ReactiveJwtAuthenticationConverterAdapter jwtAuthConverter) {
       return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-              .authorizeExchange(exchange -> exchange.pathMatchers("/api/v1/login")
+              .authorizeExchange(exchange -> exchange.pathMatchers("/api/v1/login", "/swagger-ui.html", "/swagger-ui/", "/v3/api-docs/**", "/webjars/swagger-ui/**","/openapi/**")
                       .permitAll()
                       .pathMatchers(HttpMethod.POST, "/api/v1/usuarios")
                       .hasAnyAuthority(RoleCode.ADMIN.dbName(), RoleCode.ADVISOR.dbName())
