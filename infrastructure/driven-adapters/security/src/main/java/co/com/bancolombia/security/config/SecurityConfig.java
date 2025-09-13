@@ -51,6 +51,8 @@ public class SecurityConfig {
                       .hasAnyAuthority(RoleCode.ADMIN.dbName(), RoleCode.ADVISOR.dbName())
                       .pathMatchers(HttpMethod.POST, "/api/v1/users/emails")
                       .hasAnyAuthority(RoleCode.ADVISOR.dbName())
+                      .pathMatchers(HttpMethod.GET, "/api/v1/users/document/**")
+                      .hasAnyAuthority(RoleCode.ADVISOR.dbName(), RoleCode.ADMIN.dbName())
                       .anyExchange()
                       .authenticated())
               .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(

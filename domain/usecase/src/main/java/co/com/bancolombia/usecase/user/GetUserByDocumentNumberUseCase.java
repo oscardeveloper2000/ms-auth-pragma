@@ -27,12 +27,13 @@ public class GetUserByDocumentNumberUseCase implements GetUserByDocumentNumber {
         }
 
         String doc = documentNumber.trim();
-        logger.debug("Buscando usuario: documentNumber={}", maskDocument(doc));
+        logger.debug("Buscando usuario: documentNumber={}", doc);
 
         return userRepository.findByDocumentNumber(doc)
-                .doOnNext(u -> logger.info("Usuario encontrado: id={}, documentNumber={}", u.getId(), maskDocument(doc)))
+
+                .doOnNext(u -> logger.info("Usuario encontrado: id={}, documentNumber={}", u.getId(), doc))
                 .switchIfEmpty(Mono.defer(() -> {
-                    logger.warn("Usuario no encontrado: documentNumber={}", maskDocument(doc));
+                    logger.warn("Usuario no encontrado: documentNumber={}", doc);
                     return Mono.error(new DomainValidationException("Usuario no encontrado"));
                 }))
                 .doOnError(e -> logger.error("Error consultando usuario por documento: {}", e));

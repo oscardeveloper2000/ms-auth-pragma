@@ -53,7 +53,7 @@ public class UserHandler {
 
     public Mono<ServerResponse> listenGetUserByDocumentNumber(ServerRequest request) {
         String documentNumber = request.pathVariable("documentNumber");
-        logger.info("Buscando usuario con documento: {}", documentNumber);
+        logger.info("Buscando usuario con documento MS-AUTH: {}", documentNumber);
         return getUserByDocumentNumberUseCase.apply(documentNumber)
                 .map(userMapper::toDTO)
                 .flatMap(dto -> {
