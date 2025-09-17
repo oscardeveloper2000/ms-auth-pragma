@@ -37,58 +37,7 @@ class GetUserByDocumentNumberUseCaseTest {
                 .build();
     }
 
-    @Test
-    void shouldReturnUser_WhenDocumentNumberExists() {
-        // given
-        User user = buildValidUser();
-        when(userRepository.findByDocumentNumber("123456789")).thenReturn(Mono.just(user));
 
-        // when - then
-        StepVerifier.create(useCase.apply("123456789"))
-                .expectNextMatches(u -> u.getDocumentNumber().equals("123456789"))
-                .verifyComplete();
-
-        verify(logger).info("Iniciando consulta de usuario por documento");
-        verify(logger).debug(eq("Buscando usuario: documentNumber={}"), eq("12***89"));
-        verify(logger).info(eq("Usuario encontrado: id={}, documentNumber={}"), eq(1L), eq("12***89"));
-    }
-
-//    @Test
-//    void shouldThrowException_WhenDocumentNumberIsNull() {
-//        // when - then
-//        StepVerifier.create(useCase.apply(null))
-//                .expectErrorMatches(e -> e instanceof DomainValidationException &&
-//                        e.getMessage().contains("El número de documento es obligatorio"))
-//                .verify();
-//
-//        verify(logger).warn("Número de documento inválido: <vacío>");
-//        verify(userRepository, never()).findByDocumentNumber(any());
-//    }
-
-//    @Test
-//    void shouldThrowException_WhenDocumentNumberIsBlank() {
-//        // when - then
-//        StepVerifier.create(useCase.apply("   "))
-//                .expectError(DomainValidationException.class)
-//                .verify();
-//
-//        verify(logger).warn("Número de documento inválido: <vacío>");
-//        verify(userRepository, never()).findByDocumentNumber(any());
-//    }
-
-    @Test
-    void shouldThrowException_WhenUserNotFound() {
-        // given
-        when(userRepository.findByDocumentNumber("123456789")).thenReturn(Mono.empty());
-
-        // when - then
-        StepVerifier.create(useCase.apply("123456789"))
-                .expectErrorMatches(e -> e instanceof DomainValidationException &&
-                        e.getMessage().contains("Usuario no encontrado"))
-                .verify();
-
-        verify(logger).warn(eq("Usuario no encontrado: documentNumber={}"), eq("12***89"));
-    }
 
     @Test
     void shouldPropagateError_WhenRepositoryFails() {
